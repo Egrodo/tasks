@@ -1,0 +1,38 @@
+main { 
+  height: 100vh;
+  font-size: 1.5em;
+  display: grid;
+  background-color: #E7EFC5;
+  font-family: 'Roboto', sans-serif;
+  text-align: center;
+  color: #403F4C;
+}
+
+main::selection {
+  background-color: yellow;
+}
+
+section {
+  margin: auto;
+  max-height: calc(100vh - 5em);
+  overflow: auto;
+  padding: 2em;
+  background-color: #A3C4BC;
+  box-shadow: 0 0 6px 2px #708c85;
+  border-radius: 5px;
+}
+
+section > header {
+  color: black;
+  font-size: 3em;
+  font-weight: 500;
+  margin-bottom: 1em;
+}
+
+form.ui.form {
+  font-size: 1em;
+}
+
+i.link.icon:hover {
+  background-color: #00000014;
+}
