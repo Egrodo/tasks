@@ -1,0 +1,12 @@
+section.login {
+  text-align: left;
+  width: 40%;
+}
+
+section.login > header {
+  text-align: center;
+}
+
+div.equal.width.fields {
+  margin-top: 1em;
+}

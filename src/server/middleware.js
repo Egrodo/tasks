@@ -16,7 +16,7 @@ const sendUserError = (err, res) => {
 const hashedPassword = (req, res, next) => {
   const { password } = req.body;
   if (!password) {
-    sendUserError('Gimme a password', res);
+    sendUserError('No password sent.', res);
     return;
   }
   bcrypt
@@ -31,13 +31,13 @@ const hashedPassword = (req, res, next) => {
 };
 
 const loggedIn = (req, res, next) => {
-  const { username } = req.session;
-  if (!username) {
+  const { email } = req.session;
+  if (!email) {
     sendUserError('User is not logged in.', res);
     return;
   }
 
-  User.findOne({ username }, (err, user) => {
+  User.findOne({ email }, (err, user) => {
     if (err) {
       sendUserError(err, res);
     } else if (!user) {
@@ -53,7 +53,7 @@ const loggedIn = (req, res, next) => {
 const restrictedPermissions = (req, res, next) => {
   const path = req.path;
   if (/restricted/.test(path)) {
-    if (!req.session.username) {
+    if (!req.session.email) {
       sendUserError('User not authorized.', res);
       return;
     }

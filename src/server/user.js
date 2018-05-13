@@ -10,13 +10,19 @@ mongoose.Promise = Promise;
 mongoose.connect('mongodb://localhost/hw');
 
 const UserSchema = new Schema({
-  username: {
+  email: {
     type: String,
     unique: true,
     requried: true,
+    index: true,
   },
   passwordHash: {
     type: String,
+    required: true,
+  },
+  createdDate: {
+    type: Date,
+    default: Date.now,
   },
 });
 

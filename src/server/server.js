@@ -2,9 +2,9 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const bcrypt = require('bcryptjs');
-const User = require('./user.js');
 const middleWare = require('./middleware');
 const cors = require('cors');
+const User = require('./user.js');
 
 const server = express();
 
@@ -41,13 +41,35 @@ server.use(cors());
 server.use(middleWare.restrictedPermissions);
 
 // Start routes
+server.post('/signup', middleWare.hashedPassword, (req, res) => {
+  // TODO: Validate that we're being send an email and a secure password.
+  const { email } = req.body;
+  const passwordHash = req.password;
+  const newUser = new User({ email, passwordHash });
+  newUser.save((err, savedUser) => {
+    if (err) {
+      if (err.code === 11000) {
+        // If Mongo returns error "already created user"
+        // BUG: The below line doesn't seem to be returning the json
+        // ( I tried putting them on separate lines)
+        res.status(409).json({ error: 'Email already signed up.' });
+      } else {
+        // Else TODO: handle other specific errors.
+        res.status(422).json({ error: err.message });
+      }
+    } else {
+      res.json(savedUser);
+    }
+  });
+});
+
 server.post('/login', (req, res) => {
-  const { username, password } = req.body;
-  if (!username) {
-    middleWare.sendUserError('username undefined', res);
+  const { email, password } = req.body;
+  if (!email) {
+    middleWare.sendUserError('email undefined', res);
     return;
   }
-  User.findOne({ username }, (err, user) => {
+  User.findOne({ email }, (err, user) => {
     if (err || user === null) {
       middleWare.sendUserError('No user found at that id', res);
       return;
@@ -55,9 +77,11 @@ server.post('/login', (req, res) => {
     const hashedPw = user.passwordHash;
     bcrypt.compare(password, hashedPw)
       .then((response) => {
-        // BUG: If I input the wrong password, it gives no response? Shouldn't it err?
-        if (!response) throw new Error('Invalid password (no response).');
-        req.session.username = username;
+        if (!response) {
+          res.status(422).json({ error: 'Invalid email/pass. ' });
+          return;
+        }
+        req.session.email = email;
         req.user = user;
       })
       .then(() => {
@@ -67,27 +91,12 @@ server.post('/login', (req, res) => {
   });
 });
 
-server.post('/signup', middleWare.hashedPassword, (req, res) => {
-  const { username } = req.body;
-  const passwordHash = req.password;
-  const newUser = new User({ username, passwordHash });
-  newUser.save((err, savedUser) => {
-    if (err) {
-      res.status(422);
-      res.json({ 'Need both username and password': err.message });
-      return;
-    }
-
-    res.json(savedUser);
-  });
-});
-
 server.post('/logout', (req, res) => {
-  if (!req.session.username) {
+  if (!req.session.email) {
     middleWare.sendUserError('User is not logged in', res);
     return;
   }
-  req.session.username = null;
+  req.session.email = null;
   res.json(req.session);
 });
 

@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { Form, Button } from 'semantic-ui-react';
-import { Route } from 'react-router-dom';
+import { Route, Redirect } from 'react-router-dom';
 import Validator from 'email-validator';
 import axios from 'axios';
+import InlineError from './reuse/./InlineError';
 import '../css/Signup.css';
 
 class Signup extends Component {
@@ -18,6 +19,7 @@ class Signup extends Component {
       terms: false,
       errors: {},
       loading: false,
+      check: false,
     };
 
     this.onSubmit = this.onSubmit.bind(this);
@@ -27,13 +29,32 @@ class Signup extends Component {
 
   onSubmit() {
     // Validate things, then axios req.
-    const errors = this.validate(this.state.data);
+    let errors = this.validate(this.state.data);
     if (Object.keys(errors).length !== 0) {
       this.setState({ errors });
       return;
     }
 
     this.setState({ loading: true });
+
+    const user = { email: this.state.data.email, password: this.state.data.password };
+    axios.post('http://localhost:3001/signup', user)
+      .then((res) => {
+        if (res.status === 200) {
+          // Handle successful login.
+          console.log('success');
+          this.setState({ errors: {} });
+          // return <Redirect to={'/splash'} />;
+        } else throw new Error('Failed signup');
+      }).catch((err) => {
+        // The err object only contains the status code.
+        if (err.response.status === 409) {
+          errors = this.state.errors;
+          errors.email = 'Email already signed up, try a new one?';
+          this.setState({ errors });
+        }
+      });
+    this.setState({ loading: false });
   }
 
   onChange(e) {
@@ -42,7 +63,7 @@ class Signup extends Component {
     });
   }
 
-  onTerm(e) {
+  onTerm() {
     this.setState({ terms: !this.state.terms });
   }
 
@@ -136,8 +157,5 @@ class Signup extends Component {
     );
   }
 }
-const InlineError = ({ text }) => (
-  <span style={{ color: '#ae5856' }}>{text}</span>
-);
 
 export default Signup;

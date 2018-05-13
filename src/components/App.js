@@ -4,6 +4,7 @@ import TodoPage from './TodoPage';
 import Landing from './Landing';
 import Login from './Login';
 import Signup from './Signup';
+import Splash from './Splash';
 import '../css/App.css';
 
 const App = () => (
@@ -13,6 +14,7 @@ const App = () => (
       <Route exact path="/login" component={Login} />
       <Route exact path="/signup" component={Signup} />
       <Route exact path="/todo" component={TodoPage} />
+      <Route exact path="/splash" component={Splash} />
     </Switch>
   </main>
 );
