@@ -1,38 +1,42 @@
-main { 
-  height: 100vh;
-  font-size: 1.5em;
-  display: grid;
-  background-color: #E7EFC5;
-  font-family: 'Roboto', sans-serif;
-  text-align: center;
-  color: #403F4C;
-}
-
-main::selection {
-  background-color: yellow;
-}
-
-section {
-  margin: auto;
-  max-height: calc(100vh - 5em);
-  overflow: auto;
-  padding: 2em;
-  background-color: #A3C4BC;
-  box-shadow: 0 0 6px 2px #708c85;
-  border-radius: 5px;
-}
-
-section > header {
-  color: black;
-  font-size: 3em;
+header {
+  color: #e9f4fe;
+  font-size: 2.5em;
   font-weight: 500;
   margin-bottom: 1em;
 }
 
-form.ui.form {
-  font-size: 1em;
+article.desc {
+  background-color: #474b52;
+  box-shadow: 0 0 2px 2px #474b52;
+  border-radius: 3px;
+  color: #b6babf;
+  margin: auto;
+  padding: 1em;
+  width: 30em;
+  line-height: 1.2em;
 }
 
-i.link.icon:hover {
-  background-color: #00000014;
+article.desc a {
+  color: #e9f4fe;
+}
+
+article.desc a:hover {
+  color: #00b5ad;
+  filter: brightness(1.5);
+}
+
+nav {
+  margin-top: 1.5em;
+}
+
+nav button.button {
+  transition: .35s;
+}
+
+nav button.button.gray {
+  border-radius: 3px 3px 0 0;
+}
+
+nav button.button.teal {
+  border-radius: 0 0 3px 3px;
 }

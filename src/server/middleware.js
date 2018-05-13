@@ -49,6 +49,7 @@ const loggedIn = (req, res, next) => {
   });
 };
 
+// If the path of the route includes 'restricted', ensure they're authorized (logged in).
 const restrictedPermissions = (req, res, next) => {
   const path = req.path;
   if (/restricted/.test(path)) {

@@ -1,0 +1,22 @@
+/* Basically just a body tag */
+main { 
+  height: 100vh;
+  font-size: 1.5em;
+  display: grid;
+  background-color: #2d323c;
+  color: #e9f4fe;
+  font-family: 'Roboto', sans-serif;
+  text-align: center;
+}
+
+/* A section is a centered box */
+section {
+  margin: auto;
+  max-height: calc(100vh - 5em);
+  overflow: auto;
+  padding: 2em;
+  background-color: #4c525d;
+  box-shadow: 0 0 6px 2px #4c525d;
+  border-radius: 5px;
+  font-size: 1.15em;
+}

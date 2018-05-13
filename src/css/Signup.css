@@ -1,0 +1,42 @@
+section.signup {
+  text-align: left;
+  width: 40%;
+}
+
+section.signup > header {
+  text-align: center;
+}
+
+button.button {
+  display: inline-block;
+}
+
+form.ui.form .field {
+  margin-top: 1.5em;
+}
+
+.ui.form .field > label {
+  color: #e9f4fe;
+  font-size: 1.1em;
+  font-weight: 500;
+  margin: 0 0 .5em .5em;
+}
+
+div.ui.checkbox label {
+  font-size: 1.5em;
+  color: #e9f4fe;
+  padding-left: 1.4em;
+}
+
+div.ui.checkbox label:hover, div.ui.checkbox label:focus {
+  color: #e9f4fe;
+}
+
+div.ui.checkbox label::before {
+  width: 20px;
+  height: 20px;
+}
+
+div.field.error label, div.field.error .ui.checkbox label {
+  color: #dd0000 !important;
+}

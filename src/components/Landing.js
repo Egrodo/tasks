@@ -1,17 +1,38 @@
-import React from 'react';
-import TodoContainer from './TodoContainer';
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
+import { Button } from 'semantic-ui-react';
 import '../css/Landing.css';
 
-const Landing = () => (
-  <main>
-    <section>
-      <header>
-        Current Assignments
-      </header>
-      <TodoContainer />
-    </section>
-  </main>
-);
+class Landing extends Component {
+  constructor() {
+    super();
+    this.state = {
 
+    };
+  }
+
+  render() {
+    return (
+      <section className="landing">
+        <header>
+          Task Manager
+        </header>
+        <article className="desc">
+          Welcome to Task Manager, a simple and stylistic way to manage and
+           schedule your daily tasks. Made using React, Express, and Mongo by
+          <a href="https://noahyamamoto.com" target="_blank" rel="noreferrer noopener"> Noah Yamamoto</a>.
+        </article>
+        <nav>
+          <Link to="/signup">
+            <Button content="Signup" size="huge" fluid />
+          </Link>
+          <Link to="/login">
+            <Button content="Login" size="huge" color="teal" fluid />
+          </Link>
+        </nav>
+      </section>
+    );
+  }
+}
 
 export default Landing;

@@ -12,17 +12,20 @@ const server = express();
 server.use(bodyParser.urlencoded({ extended: true }));
 server.use(bodyParser.json());
 
+// express.Router().use('/api', require('./api'));
+
 server.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Allow-Methods', 'GET,HEAD,OPTIONS,POST,PUT,DELETE');
   res.setHeader('Access-Control-Allow-Headers', 'Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers');
 
-  // And disable caching?
+  // And disable TODO: Is this needed?
   res.setHeader('Cache-Control', 'no-cache');
   next();
 });
 
+// Setup express-session secret and settings.
 server.use(
   session({
     secret: 'correctHorseBatteryStaple',
@@ -31,9 +34,13 @@ server.use(
   }),
 );
 
+// Enable all CORS requests TODO: configure this properly instead of enable-all.
 server.use(cors());
+
+// Ensure that the user has permissions for whichever route they're requesting.
 server.use(middleWare.restrictedPermissions);
 
+// Start routes
 server.post('/login', (req, res) => {
   const { username, password } = req.body;
   if (!username) {
@@ -49,7 +56,7 @@ server.post('/login', (req, res) => {
     bcrypt.compare(password, hashedPw)
       .then((response) => {
         // BUG: If I input the wrong password, it gives no response? Shouldn't it err?
-        if (!response) throw new Error('No response from Bcrypt.');
+        if (!response) throw new Error('Invalid password (no response).');
         req.session.username = username;
         req.user = user;
       })
@@ -99,4 +106,9 @@ server.get('/me', middleWare.loggedIn, (req, res) => {
   res.send({ user: req.user, session: req.session });
 });
 
-server.listen(3000);
+// If request got to bottom of the file, it's invalid. Send 404.
+server.use((req, res) => {
+  res.status(404).send('Invalid route path.');
+});
+
+server.listen(3001);

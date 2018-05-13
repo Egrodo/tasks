@@ -5,7 +5,10 @@ import { Input, Form, Icon } from 'semantic-ui-react';
 class Todo extends Component {
   constructor(props) {
     super(props);
-    this.state = { todo: props.item };
+    this.state = {
+      todo: props.item,
+      editing: false,
+    };
 
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
@@ -13,13 +16,14 @@ class Todo extends Component {
   }
 
   onChange(e) {
-    this.setState({ todo: e.target.value });
+    this.setState({ todo: e.target.value, editing: true });
   }
 
   onSubmit(e) {
-    // If the item has been edited, save it.
+    // If the item has been changed, save it.
     e.preventDefault();
     if (this.state.todo !== this.props.item) this.props.saveEdit(this.state.todo, this.props.index);
+    this.setState({ editing: false });
   }
 
   onDelete() {
@@ -33,7 +37,13 @@ class Todo extends Component {
           value={this.state.todo}
           onChange={this.onChange}
           fluid
-          icon={
+          icon={this.state.editing ?
+            <Icon
+              name="check"
+              link
+              onClick={this.onSubmit}
+            />
+            :
             <Icon
               name="delete"
               link
