@@ -1,0 +1,36 @@
+form.ui.form {
+  font-size: 1em;
+}
+
+i.link.icon:hover {
+  background-color: #00000014;
+}
+
+article.assignment {
+  background-color: #474b52;
+  -webkit-box-shadow: 0 0 2px 2px #474b52;
+  box-shadow: 0 0 2px 2px #474b52;
+  font-size: 1.1em;
+}
+
+article.assignment div {
+  padding: .5em;
+}
+
+article.assignment:hover {
+  cursor: pointer;
+  background-color: #41444b
+}
+
+article.assignment i {
+  float: right;
+}
+
+article.assignment i.link.icon:hover {
+  background-color: inherit;
+}
+
+div.ui.text.fluid.container {
+  font-size: .7em;
+  text-align: left;
+}

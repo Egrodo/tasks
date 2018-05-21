@@ -1,6 +1,7 @@
 import React from 'react';
 import { Switch, Route } from 'react-router-dom';
 import TodoPage from './TodoPage';
+import Assignments from './Assignments';
 import Landing from './Landing';
 import Login from './Login';
 import Signup from './Signup';
@@ -15,7 +16,8 @@ const App = () => (
       <Route exact path="/login" component={Login} />
       <Route exact path="/signup" component={Signup} />
       <Route exact path="/app" component={Splash} />
-      <Route exact path="/todo" component={TodoPage} />
+      <Route exact path="/todoOld" component={TodoPage} />
+      <Route exact path="/todo" component={Assignments} />
       <Route path="/" component={notFound} />
     </Switch>
   </main>
