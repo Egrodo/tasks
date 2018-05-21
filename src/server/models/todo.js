@@ -16,7 +16,6 @@ const Todos = new Schema({
   },
   content: {
     type: String,
-    requried: true,
   },
   createdDate: {
     type: Date,

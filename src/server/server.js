@@ -43,7 +43,7 @@ server.use(middleWare.restrictedPermissions);
 
 // Start routes
 server.post('/signup', middleWare.hashedPassword, (req, res) => {
-  // TODO: Validate that we're being send an email and a secure password.
+  // TODO: Validate that we're being sent an email and a secure password.
   const { email } = req.body;
   const passwordHash = req.password;
   const newUser = new User({ email, passwordHash });
@@ -63,8 +63,8 @@ server.post('/signup', middleWare.hashedPassword, (req, res) => {
 
 server.post('/login', (req, res) => {
   const { email, password } = req.body;
-  if (!email) {
-    middleWare.sendUserError('email undefined', res);
+  if (!email || !password) {
+    middleWare.sendUserError('email/pass undefined', res);
     return;
   }
   User.findOne({ email }, (err, user) => {
@@ -81,8 +81,7 @@ server.post('/login', (req, res) => {
         }
         req.session.email = email;
         req.user = user;
-      })
-      .then(() => {
+        // What else do I need to be sending back to manage sessions?
         res.json({ success: true });
       })
       .catch(error => middleWare.sendUserError(error, res));
@@ -94,8 +93,10 @@ server.post('/logout', (req, res) => {
     middleWare.sendUserError('User is not logged in', res);
     return;
   }
-  req.session.email = null;
-  res.json(req.session);
+  req.session.destroy((err) => {
+    if (err) middleWare.sendUserError(err, res, 500);
+    res.json({ success: true });
+  });
 });
 
 server.get('/me', middleWare.loggedIn, (req, res) => {

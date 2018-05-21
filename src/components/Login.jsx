@@ -42,8 +42,9 @@ class Login extends Component {
     axios.post('http://localhost:3001/login', user)
       .then((res) => {
         if (res.status === 200) {
-          this.setState({ errors: {}, loading: false, success: true });
           // TODO: Session stuffs, then send to /app.
+          console.log(res.data);
+          this.setState({ errors: {}, loading: false, success: true });
         }
       }).catch((err) => {
         if (err.response.status === 422) {

@@ -26,6 +26,8 @@ class TodoPage extends Component {
     // This would probably work if I got the session working.
     axios.get('http://localhost:3001/todo').then(res => {
       console.log(res.body);
+    }).catch(err => {
+      console.error(err.response.data.error);
     });
   }
 
