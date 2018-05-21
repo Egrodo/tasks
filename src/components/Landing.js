@@ -23,11 +23,11 @@ class Landing extends Component {
           <a href="https://noahyamamoto.com" target="_blank" rel="noreferrer noopener"> Noah Yamamoto</a>.
         </article>
         <nav>
-          <Link to="/signup">
-            <Button content="Signup" size="huge" fluid />
-          </Link>
           <Link to="/login">
             <Button content="Login" size="huge" color="teal" fluid />
+          </Link>
+          <Link to="/signup">
+            <Button content="Signup" size="huge" fluid />
           </Link>
         </nav>
       </section>

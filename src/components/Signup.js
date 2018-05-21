@@ -3,7 +3,7 @@ import { Form, Button } from 'semantic-ui-react';
 import { Route, Redirect } from 'react-router-dom';
 import Validator from 'email-validator';
 import axios from 'axios';
-import InlineError from './reuse/./InlineError';
+import InlineError from './reuse/InlineError';
 import '../css/Signup.css';
 
 class Signup extends Component {
@@ -20,6 +20,7 @@ class Signup extends Component {
       errors: {},
       loading: false,
       check: false,
+      success: false,
     };
 
     this.onSubmit = this.onSubmit.bind(this);
@@ -43,18 +44,15 @@ class Signup extends Component {
         if (res.status === 200) {
           // Handle successful login.
           console.log('success');
-          this.setState({ errors: {} });
-          // return <Redirect to={'/splash'} />;
+          this.setState({ errors: {}, loading: false, success: true });
         } else throw new Error('Failed signup');
       }).catch((err) => {
-        // The err object only contains the status code.
         if (err.response.status === 409) {
           errors = this.state.errors;
           errors.email = 'Email already signed up, try a new one?';
-          this.setState({ errors });
+          this.setState({ errors, loading: false });
         }
       });
-    this.setState({ loading: false });
   }
 
   onChange(e) {
@@ -82,6 +80,7 @@ class Signup extends Component {
   }
 
   render() {
+    if (this.state.success) return <Redirect to="/todo" />;
     const { data, errors } = this.state;
     return (
       <section className="signup">

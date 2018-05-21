@@ -1,12 +1,11 @@
 const bcrypt = require('bcrypt');
-const User = require('./user');
+const User = require('./models/user');
 
-const STATUS_USER_ERROR = 422;
 const BCRYPT_COST = 11;
 
 
-const sendUserError = (err, res) => {
-  res.status(STATUS_USER_ERROR);
+const sendUserError = (err, res, code = 422) => {
+  res.status(code);
   if (err && err.message) {
     res.json({ message: err.message, stack: err.stack });
   } else res.json({ error: err });
@@ -19,13 +18,11 @@ const hashedPassword = (req, res, next) => {
     sendUserError('No password sent.', res);
     return;
   }
-  bcrypt
-    .hash(password, BCRYPT_COST)
+  bcrypt.hash(password, BCRYPT_COST)
     .then((pw) => {
       req.password = pw;
       next();
-    })
-    .catch((err) => {
+    }).catch((err) => {
       throw new Error(err);
     });
 };

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Icon, List, Input, Form } from 'semantic-ui-react';
-import Todo from './Todo';
+import axios from 'axios';
+import Todo from './reuse/Todo';
 import '../css/TodoPage.css';
 
 // TODO: Restrict this page.
@@ -19,6 +20,13 @@ class TodoPage extends Component {
     this.onSubmit = this.onSubmit.bind(this);
     this.saveEdit = this.saveEdit.bind(this);
     this.deleteItem = this.deleteItem.bind(this);
+  }
+
+  componentDidMount() {
+    // This would probably work if I got the session working.
+    axios.get('http://localhost:3001/todo').then(res => {
+      console.log(res.body);
+    });
   }
 
   onChange(e) {

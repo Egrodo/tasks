@@ -5,6 +5,7 @@ import Landing from './Landing';
 import Login from './Login';
 import Signup from './Signup';
 import Splash from './Splash';
+import notFound from './notFound';
 import '../css/App.css';
 
 const App = () => (
@@ -13,11 +14,20 @@ const App = () => (
       <Route exact path="/" component={Landing} />
       <Route exact path="/login" component={Login} />
       <Route exact path="/signup" component={Signup} />
+      <Route exact path="/app" component={Splash} />
       <Route exact path="/todo" component={TodoPage} />
-      <Route exact path="/splash" component={Splash} />
+      <Route path="/" component={notFound} />
     </Switch>
   </main>
 );
 
-
+/*
+<Route exact path="/" render={() => (
+  loggedIn ? (
+    <Redirect to="/dashboard"/>
+  ) : (
+    <PublicHomePage/>
+  )
+)}/>
+*/
 export default App;

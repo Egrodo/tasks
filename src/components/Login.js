@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Form, Button } from 'semantic-ui-react';
-import { Route } from 'react-router-dom';
+import { Route, Redirect } from 'react-router-dom';
 import axios from 'axios';
 import Validator from 'email-validator';
 import InlineError from './reuse/InlineError';
@@ -16,7 +16,9 @@ class Login extends Component {
       },
       errors: {},
       loading: false,
+      success: false,
     };
+
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
   }
@@ -40,8 +42,8 @@ class Login extends Component {
     axios.post('http://localhost:3001/login', user)
       .then((res) => {
         if (res.status === 200) {
-          this.setState({ errors: {}, loading: false });
-          alert('Successfully logged in.');
+          this.setState({ errors: {}, loading: false, success: true });
+          // TODO: Session stuffs, then send to /app.
         }
       }).catch((err) => {
         if (err.response.status === 422) {
@@ -63,6 +65,7 @@ class Login extends Component {
   }
 
   render() {
+    if (this.state.success) return <Redirect to="/todo" />;
     const { data, errors } = this.state;
     return (
       <section className="login">

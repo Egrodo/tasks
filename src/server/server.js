@@ -4,7 +4,8 @@ const session = require('express-session');
 const bcrypt = require('bcryptjs');
 const middleWare = require('./middleware');
 const cors = require('cors');
-const User = require('./user.js');
+const User = require('./models/user');
+const Todo = require('./models/todo');
 
 const server = express();
 
@@ -49,10 +50,7 @@ server.post('/signup', middleWare.hashedPassword, (req, res) => {
   newUser.save((err, savedUser) => {
     if (err) {
       if (err.code === 11000) {
-        // If Mongo returns error "already created user"
-        // BUG: The below line doesn't seem to be returning the json
-        // ( I tried putting them on separate lines)
-        res.status(409).json({ error: 'Email already signed up.' });
+        middleWare.sendUserError('Email already signed up.', res, 409);
       } else {
         // Else TODO: handle other specific errors.
         res.status(422).json({ error: err.message });
@@ -78,7 +76,7 @@ server.post('/login', (req, res) => {
     bcrypt.compare(password, hashedPw)
       .then((response) => {
         if (!response) {
-          res.status(422).json({ error: 'Invalid email/pass. ' });
+          middleWare.sendUserError('Invalid email/pass. ', res);
           return;
         }
         req.session.email = email;
@@ -100,24 +98,43 @@ server.post('/logout', (req, res) => {
   res.json(req.session);
 });
 
-// If logged in, return a list of users.
-server.get('/restricted/users', (req, res) => {
-  User.find({}, (err, users) => {
+server.get('/me', middleWare.loggedIn, (req, res) => {
+  res.json({ user: req.user, session: req.session });
+});
+
+// TODO: Proper error handling.
+server.post('/todo', middleWare.loggedIn, (req, res) => {
+  if (!req.body.content || !req.body.title) {
+    middleWare.sendUserError('No proper todo supplied.', res);
+    return;
+  }
+  const { title, content } = req.body;
+  if (title.length > 51) {
+    middleWare.sendUserError('Title too long.', res);
+    return;
+  } else if (content.length > 1025) {
+    middleWare.sendUserError('Content too long.', res);
+    return;
+  }
+
+  const newTodo = new Todo({ author: req.user._id, title, content });
+  newTodo.save((err, savedTodo) => {
     if (err) {
-      middleWare.sendUserError('500', res);
-      return;
-    }
-    res.json(users);
+      res.status(500).send({ success: false, err });
+    } else res.json({ success: true, savedTodo });
   });
 });
 
-server.get('/me', middleWare.loggedIn, (req, res) => {
-  res.send({ user: req.user, session: req.session });
+server.get('/todo', middleWare.loggedIn, (req, res) => {
+  Todo.find({ author: req.user._id }, (err, todos) => {
+    if (err) {
+      res.status(500).send({ success: false, err });
+    } else if (todos.length === 0) {
+      res.json({ success: true, message: 'You have no todos yet!' });
+    } else res.json(todos);
+  });
 });
 
 // If request got to bottom of the file, it's invalid. Send 404.
-server.use((req, res) => {
-  res.status(404).send('Invalid route path.');
-});
-
+server.use((req, res) => res.status(404).send('Invalid route path.'));
 server.listen(3001);
